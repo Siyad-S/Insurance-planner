@@ -9,8 +9,8 @@ connectDb();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use('/api/user', require("./routes/userRoute"));
-app.use('/api/policy', require("./routes/policyRoute"));
+app.use('/user', require("./routes/userRoute"));
+app.use('/policy', require("./routes/policyRoute"));
 
 
 app.listen(port, () => {
