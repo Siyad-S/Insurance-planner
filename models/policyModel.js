@@ -9,7 +9,7 @@ const policySchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    insuranceDetails: {
+    insurance_details: {
         type: String,
         required: true
     }

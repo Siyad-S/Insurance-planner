@@ -1,10 +1,11 @@
 const express = require('express');
 const port = 4000
 const connectDb = require("./config/dbConnection")
-
+const cors = require("cors")
 
 const app = express();
 connectDb();
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
