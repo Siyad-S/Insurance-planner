@@ -22,8 +22,8 @@ const userSchema = new mongoose.Schema({
     address: {
         type: String
     },
-    qualification: {
-        type: String
+    qualifications: {
+        type: [String]
     },
     profession: {
         type: String
@@ -35,15 +35,12 @@ const userSchema = new mongoose.Schema({
         type: String
     },
     insuranceData: {
-        type: [String]
+        type: String
     },
     insuranceStatus: {
         type: String,
         default: "Pending"
     },
-    user_image: {
-        type: String
-    }
 
 })
 

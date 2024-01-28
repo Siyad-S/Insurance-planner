@@ -39,7 +39,28 @@ const getPolicies = asyncHandler(async (req, res) => {
   }
 });
 
+const getPolicy = asyncHandler(async (req, res) => {
+  try {
+    const id = req.params
+    const getPolicies = await policy.findById(id);
+    if (getPolicies) {
+      res.status(200).json({
+        message: "Policies are retrieved successfully",
+        getPolicies,
+      });
+    } else {
+      res.status(400).json({
+        message: "Error occurred while retrieving policies",
+        getPolicies,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error: " + error.message });
+  }
+});
+
 module.exports = {
   postPolicies,
   getPolicies,
+  getPolicy
 };

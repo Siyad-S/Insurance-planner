@@ -11,26 +11,30 @@ const postInsurance = asyncHandler(async (req, res) => {
       dob,
       age,
       address,
-      qualification,
+      qualifications,
       profession,
       nominee,
       relationship,
       insuranceData,
     } = req.body;
 
+    console.log(req.body);
+
     if (
       !salutation ||
+      !name ||
+      !email ||
       !gender ||
       !dob ||
       !age ||
       !address ||
-      !qualification ||
+      !qualifications ||
       !profession ||
       !nominee ||
-      !relationship ||
-      !insuranceData
+      !relationship||
+      !insuranceData 
     ) {
-      res.status(400).json({ message: "All fields are mandatory" });
+      res.status(400).json({message: "All fields are mandatory"});
     } else {
       const insurePurchaser = await user.create({
         salutation,
@@ -40,13 +44,14 @@ const postInsurance = asyncHandler(async (req, res) => {
         dob,
         age,
         address,
-        qualification,
+        qualifications,
         profession,
         nominee,
         relationship,
         insuranceData,
+        insuranceStatus: "Pending",
       });
-
+  
       res.status(201).json({ message: "Insurance posted", insurePurchaser });
     }
   } catch (error) {
@@ -59,7 +64,7 @@ const postInsurance = asyncHandler(async (req, res) => {
 const updateInsurance = asyncHandler(
     async (req, res) => {
         try {
-          const userData = {...req.body, user_image: req.file.filename}
+          const userData = {...req.body}
           const updateUser = await user.findByIdAndUpdate(req.params.id, userData, {new : true})
           res.status(200).json({ message: "Insurance gotten", updateUser});
         } catch (error) {
@@ -72,7 +77,37 @@ const updateInsurance = asyncHandler(
 const getInsurance = asyncHandler(
   async (req, res) => {
     try {
-      const insuranceData = await user.find()
+      const { name, email } = req.query;
+      if (name || email) {
+        const insuranceData = await user.find({
+          $or: [
+            { $regex: new RegExp(name, "i") },
+            { $regex: new RegExp(email, "i") },
+          ],
+        });
+        console.log("search result:", insuranceData);
+        res.status(200).json({ message: "searched data", insuranceData });
+      } else {
+        const insuranceData = await user.find();
+        console.log("all data:", insuranceData);
+        res.status(200).json({ message: "Insurance gotten successfully", insuranceData });
+      }
+    } catch (error) {
+      console.error("Error during search:", error.message);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+);
+
+
+
+
+const getSingleInsurance = asyncHandler(
+  async (req, res) => {
+    try {
+      const id = req.params.id
+      console.log(id)
+      const insuranceData = await user.findById(id)
       if (insuranceData) {
         res.status(201).json({ message: "Insurance gotten successfully", insuranceData });
       } else {
@@ -97,6 +132,7 @@ const deleteInsurance = async (req, res) => {
 module.exports = {
   postInsurance,
   getInsurance,
+  getSingleInsurance,
   updateInsurance,
   deleteInsurance,
 };
